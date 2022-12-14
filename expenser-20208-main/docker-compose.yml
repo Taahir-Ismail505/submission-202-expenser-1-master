@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  database:
+    image: postgres:14-alpine
+    environment:
+      POSTGRES_PASSWORD: insecure_password
+    ports:
+      - 5432:5432
+
+  message_broker:
+    image: rabbitmq:3.8.19-management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672

@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  grader:
+    container_name: grader
+    image: jwolf1993/selenium:latest
+    command: ${GRADE_CMD}
+    volumes:
+      - ${PWD}:/app

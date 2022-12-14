@@ -1,0 +1,27 @@
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns:th="http://www.w3.org/1999/xhtml"
+        layout:decorate="~{/layout.html}">
+<head></head>
+<body>
+<main>
+<div layout:fragment="contents">
+        <h1>Settle a claim</h1>
+        <form method="post" action="/settleclaim">
+                <label for="email">You want to settle from</label>
+                <input name="email" id="email" type="email" th:value="${email}" disabled>
+
+                <label for="due_date">that was due on</label>
+                <input name="due_date" id="due_date" type="date" th:value="${due_date}" disabled>
+
+                <label for="description">for</label>
+                <input name="text" id="description" type="text" th:value="${description}" disabled>
+
+                <label for="claim_amount">You owe</label>
+                <input name="claim_amount" id="claim_amount" type="number"  th:value="${claim_amount} + '0'" disabled>
+
+                <input id="settle" type="submit" value="settle">
+        </form>
+</div>
+</main>
+</body>
+</html>

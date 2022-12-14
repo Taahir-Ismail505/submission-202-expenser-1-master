@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" xmlns="http://www.w3.org/1999/html"
+        layout:decorate="~{/layout.html}">
+<head>
+    <script src="/js/claimexpense.js" defer></script>
+</head>
+<body>
+<div layout:fragment="contents">
+    <h1>Submit a claim for the following expense</h1>
+    <table id="expense">
+        <tr>
+            <td th:id="'expense_date'" th:text="${session.expense.date}"/>
+            <td th:id="'expense_description'" th:text="${session.expense.description}"></td>
+            <td th:id="'expense_amount'"
+                th:text="${#numbers.formatDecimal(session.expense.amount, 1, 'COMMA', 2, 'POINT')}"/>
+        </tr>
+
+    </table>
+    <section id="claims_section">
+        <table id="claims">
+
+            <thead>
+                <tr>
+                    <th>Who</th>
+                    <th>How much</th>
+                    <th>Settled</th>
+                    <th>By when</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="claim : ${session.claims}">
+                <td th:id="'claim_who_' + ${claimStat.count}" th:text="${#strings.capitalize(#strings.substring(claim.claimedFrom.getName, 1, #strings.length(claim.claimedFrom.getName)))}"></td>
+
+                <td th:id="'claim_amount_' + ${claimStat.count}" th:text="${#numbers.formatDecimal(claim.amount, 1, 'COMMA', 2, 'POINT')}"></td>
+
+                <div th:switch="${claim.settled}">
+                    <td th:id="'claim_settled_' + ${claimStat.count}" th:case="false">No</td>
+                    <td th:id="'claim_settled_' + ${claimStat.count}" th:case="*">Yes</td>
+                </div>
+
+                <td th:id="'claim_date_' + ${claimStat.count}" th:text="${claim.dueDate}"></td>
+            </tr>
+
+            <tr>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td>&nbsp;</td>
+                <td id="total_claims" th:text="${#numbers.formatDecimal(session.claimsTotal, 1, 'COMMA', 2, 'POINT')}"></td>
+                <td id="unclaimed_amount" th:text="${#numbers.formatDecimal(session.unclaimedAmount, 1, 'COMMA', 2, 'POINT')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+    <form id="claim_form" method="post" action="/api/claims" enctype="application/x-www-form-urlencoded">
+        <label for="email">The email of the person that should pay you</label>
+        <input name="email" id="email" type="email" autofocus required>
+
+        <label for="claim_amount">The amount they should pay you</label>
+        <input name="claim_amount" id="claim_amount" type="number" autofocus required>
+        <!--                th:text="${#numbers.formatDecimal(session.totalAmountClaimsTo, 1, 'COMMA', 2, 'POINT')}-->
+
+        <label for="due_date">By when they should pay you</label>
+        <input name="due_date" id="due_date" type="dueDate" autofocus required>
+
+        <button id="add_claim" type="submit" value="Claim Expense">Submit</button>
+    </form>
+</div>
+<script></script>
+</body>
+
+</html>

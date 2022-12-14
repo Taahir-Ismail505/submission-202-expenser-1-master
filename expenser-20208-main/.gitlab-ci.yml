@@ -1,0 +1,15 @@
+image: openkbs/jdk11-mvn-py3:latest
+
+build:
+  stage: build
+  script:
+    - mvn initialize
+    - mvn clean
+    - mvn verify -Dmaven.test.skip
+    - mvn compile
+
+unit_tests:
+  stage: test
+  script:
+    - mvn initialize
+    - mvn test

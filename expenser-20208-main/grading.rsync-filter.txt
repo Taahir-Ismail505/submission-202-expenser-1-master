@@ -1,0 +1,18 @@
+; These rsync filter rules specify which files to copy over the student's submission repo.
+; rsync has some quirks: the order of these rules matter
+; Read here to understand: https://unix.stackexchange.com/a/307863/329735
+
++ /src
+- /src/main
+
+; files to copy:
++ docker-compose.grading.yml
+
+; test packages to include explicitly:
++ /src/test/java/**/scenario_tests
+
+;exclude other tests not explicitly included:
+- /src/test/java/za/co/wethinkcode/expenser/*
+
+; exclude everything else by default:
+- /*

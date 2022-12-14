@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/layout.html}">
+<head></head>
+<body>
+    <h1>WeShare</h1>
+    <p id="user" th:text="${session.user.email}">person@domain.com</p>
+    <nav>
+        <a href="/home">Home</a>
+        <a href="/logout" id="logout" th:text="'Logout ' + ${session.user.name}">Logout Person</a>
+    </nav>
+
+    <div layout:fragment="contents">
+        <h1>My expenses</h1>
+        <a id="add_expense" href="/newexpense">Add a new expense</a>
+
+        <td th:switch="${session.numberOfExpenses}">
+            <p id="no_expenses" th:case="0">You don't have any expenses!</p>
+            <div th:case="*">
+                <table id="expenses">
+                    <tr>
+                        <th>When</th>
+                        <th>What</th>
+                        <th>How much</th>
+                    </tr>
+
+                    <tr th:each="expense, stats : ${expenses}">
+                        <td th:id="'date_' + ${stats.index + 1}" th:text="${expense.date}" />
+
+                        <td>
+                            <a th:id="'claim_expense_' + ${stats.index + 1}" th:href="@{/claimexpense(claimId=${expense.id})}" th:text="${expense.description}"></a>
+                        </td>
+
+                        <td th:id="'amount_' + ${stats.index + 1}" th:text="${#numbers.formatDecimal(expense.amount, 1, 'COMMA', 2, 'POINT')}" />
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td id="expenses_total" th:text="${#numbers.formatDecimal(session.totalAmountExpenses, 1, 'COMMA', 2, 'POINT')}"></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+
+        <h1>People that owe me</h1>
+        <td th:switch="${session.numberOfClaimsFrom}">
+            <p id="nobody_owes" th:case="0">Nobody owes you any money!</p>
+            <div th:case="*">
+                <table id="they_owe_me">
+                    <tr>
+                        <th>Who</th>
+                        <th>What</th>
+                        <th>Due</th>
+                        <th>How much</th>
+                    </tr>
+
+                    <tr th:each="claim: ${claimsFrom}">
+                        <td th:text="${claim.claimedFrom.name}" />
+
+                        <td  th:text="${claim.expense.description}"></td>
+
+                        <td th:text="${claim.dueDate}" />
+                        <td th:text="${#numbers.formatDecimal(claim.expense.amount, 1, 'COMMA', 2, 'POINT')}" />
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td id="they_owe_me_total" th:text="${#numbers.formatDecimal(session.totalAmountClaimsFrom, 1, 'COMMA', 2, 'POINT')}"></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+
+        <h1>People I owe</h1>
+<!--        <a href="/settleclaim">Settle Claim</a>-->
+        <td th:switch="${session.numberOfClaimsTo}">
+            <p id="owe_nobody" th:case="0">You don't owe anyone!</p>
+            <div id="i_owe_them" th:case="*">
+                <table value="i_owe_them">
+                    <tr>
+                        <th>Who</th>
+                        <th>What</th>
+                        <th>Due</th>
+                        <th>How much</th>
+                    </tr>
+
+                    <tr th:each="claim: ${claimsTo}">
+                        <td th:text="${claim.claimedBy.name}" />
+
+                        <td th:id="'settle_' + ${claimStat.index + 1}">
+                            <a th:href="@{/settleclaim(claimId=${claim.id})}" th:text="${claim.expense.description}"></a>
+                        </td>
+
+                        <td th:text="${claim.dueDate}"/>
+                        <td th:text="${#numbers.formatDecimal(claim.expense.amount, 1, 'COMMA', 2, 'POINT')}" />
+                    </tr>
+
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td id="i_owe_them_total" th:text="${#numbers.formatDecimal(session.totalAmountClaimsTo, 1, 'COMMA', 2, 'POINT')}"></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+
+        <td th:switch="${session.netExpenses}">
+            <p th:case="0.0"></p>
+            <div th:case="*">
+                <table>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td>&nbsp;</td>
+                        <td id="nett_expenses" th:text="${#numbers.formatDecimal(session.nettExpenses, 1, 'COMMA', 2, 'POINT')}"></td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/layout.html}">
+<head>
+    <title>New Expense</title>
+    <link rel="stylesheet" type="text/css" href="normalize.css">
+    <link  href="normalize.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<div layout:fragment="contents">
+    <h1>Capture An Expense</h1>
+
+    <div id = "Capture-this">
+        <form action="/newexpense" method="post">
+            <label>What did you spend money on?</label><br>
+            <input type="text" id="description" name="description"><br><br>
+            <label for="amount">How much did you spend?</label><br>
+            <input type="number" id="amount" name="amount"><br><br>
+            <label for="date">When did you spend the money?</label><br>
+
+            <input type="date" id="date" name="date"
+                   value="2021-12-17"
+                   min="2021-01-01" max="2030-12-31"><br><br><br>
+
+            <input type="submit" id = "submit" value="Submit">
+        </form>
+
+    </div>
+</div>
+</body>
+</html>
+</body>
+
+</html>
